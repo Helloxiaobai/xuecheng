@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.TeachplanMapper">
+    <resultMap id="TeachplanMap" type="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+        <id column="one_id" property="id"></id>
+        <result column="one_name" property="pname"></result>
+        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+            <id column="b_id" property="id"></id>
+            <result column="b_name" property="pname"></result>
+            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+                <id column="c_id" property="id"></id>
+                <result column="c_name" property="pname"></result>
+                <result column="media_id" property="mediaId"></result>
+                <result column="media_fileoriginalname" property="mediaFileOriginalName"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="selectList" parameterType="java.lang.String"
+            resultMap="TeachplanMap">
+        SELECT
+    a.id one_id, a.pname one_name, b.id b_id, b.pname b_name, c.id c_id, c.pname c_name,
+    d.media_id,d.media_fileoriginalname
+FROM
+    teachplan a
+        LEFT JOIN
+    teachplan b ON b.parentid = a.id
+        LEFT JOIN
+    teachplan c ON c.parentid = b.id
+        LEFT JOIN
+    teachplan_media d on c.id = d.teachplan_id
+WHERE
+    a.parentid = '0'
+    <if test = "_parameter!=null and _parameter !=''">
+        AND a.courseid = #{courseId}
+    </if>
+ORDER BY a.orderby , b.orderby , c.orderby;
+    </select>
+</mapper>
