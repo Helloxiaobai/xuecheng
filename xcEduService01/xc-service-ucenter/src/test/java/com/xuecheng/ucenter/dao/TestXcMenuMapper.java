@@ -29,4 +29,10 @@ public class TestXcMenuMapper {
         XcUser test02 = xcUserRepository.findByUsername("itcast");
         System.out.println(test02);
     }
+
+    @Test
+    public void testxcUserRepository1(){
+        XcUser test02 = xcUserRepository.findByUsername("itcast");
+        System.out.println(test02);
+    }
 }
